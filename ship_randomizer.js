@@ -43,21 +43,21 @@ var shipTypes = [ {type: "battleship", gridLength: 5, positionArray: [], statusA
 				   ]
 
 function shipRandomizer (shipTypes){
-	var grid = range(100);
+	var grid = range(101);
 	var startingPos = Math.floor((Math.random() * 100) + 1);
 	var increase = shuffleArray([1,10, -1, -10])[0]
 	
-	// if the starting position combined with the gridLength of the ship is greater than a row 
-	// have it add on the other side of the ship
+	// check if we can move in a particular direction from startPos to the gridLength
+	// if successful, increment/decrement startPos and add to positionArray
+	//else change startPos and check logic again
 
-	for (var i = 0, i < this.shipTypes - 1; i++) {
-	 	var ship = shipTypes[i]
-	 	var gridLength = shiptypes[i].gridLength
-	 	var position = shipTypes[i].positionArray
+	
+
+}
 
 
-	}
-
+function gridValidation() {
+	// checks to see if we can place ship from startPos through ship gridLength
 }
 
 
