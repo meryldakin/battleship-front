@@ -86,7 +86,7 @@ const board = [
 
 var shipTypes = [ {type: "battleship", shipLength: 5, positionArray: [], statusArray: [true, true, true, true, true]}, 
            {type: "cruiser", shipLength: 4, positionArray: [], statusArray: [true, true, true, true]}, 
-           {type: "destroyer", shipLength: 3, positionArray: [], statusArray: [true, true, true], 
+           {type: "destroyer", shipLength: 3, positionArray: [], statusArray: [true, true, true]}, 
            {type: "submarine", shipLength: 3, positionArray: [], statusArray: [true, true, true]}, 
            {type: "frigate", shipLength: 2, positionArray: [], statusArray: [true, true]} 
            ]
@@ -97,32 +97,18 @@ function shipRandomizer (shipTypes){
   var startingPos = Math.floor((Math.random() * 100) + 1);
   var increase = shuffleArray([1,10, -1, -10])[0]
 
-  for (var i = 0; i < shipTypes.length - 1; i++) {
-    var ship = shipTypes[i]
-    var length = ship.shipLength
-    var position = ship.positionArray
-
-
+  for (var i = 0; i < shipTypes.length ; i++) {
+    let ship = shipTypes[i]
+    ship.positionArray = direction(this.shipLength)
+    console.log(ship);
   }
-  
-  // check if we can move in a particular direction from startPos to the shipLength
-  // if successful, increment/decrement startPos and add to positionArray
-  //else change startPos and check logic again
-
-  
-
 }
 
 
-function gridValidation(randNum) {
-  //helper method to validate if ship can be placed in specific randomPos
-  var shipLength = this.shipLength
-  
-
-  
-
-  
-}
+// function gridValidation(randNum) {
+//   //helper method to validate if ship can be placed in specific randomPos
+//   var shipLength = this.shipLength  
+// }
 
 function generateStartPos() {
   return [shuffleArray(range(10))[0], shuffleArray(range(10))[0]];
@@ -149,7 +135,8 @@ function direction(shipLength) {
   var shuffleDirections = shuffleArray(directionsArray) // array of rand directions
 
 
-  shuffleDirections.forEach(function(e){
+  function shuffleDirections(shipLength) {
+    shuffleDirections.forEach(function(e){
     var shipPos = []
     for(var i = 0; i < shipLength-1; i++){
       let newPos = e(startPos)
@@ -158,10 +145,14 @@ function direction(shipLength) {
     }
     if(shipPos.every(function(element){return element === 0})){
       return shipPos
-    } 
+    }  
   })
+    return false
+  }
 
-
+  while (shuffleDirections(shipLength) === false) {
+    direction(shipLength)
+  }
 }
 
 
