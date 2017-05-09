@@ -62,7 +62,7 @@ function range(start, edge, step) {
     edge = start;
     start = 0;
   } 
-  edge = edge || 1;
+  edge = edge || 0;
   step = step || 1;
  
   for (var ret = []; (edge - start) * step > 0; start += step) {
@@ -97,13 +97,30 @@ function shipRandomizer (shipTypes){
   var startingPos = Math.floor((Math.random() * 100) + 1);
   var increase = shuffleArray([1,10, -1, -10])[0]
 
-  for (var i = 0; i < shipTypes.length ; i++) {
+  for(var i = 0; i < shipTypes.length ; i ++){
     let ship = shipTypes[i]
-    ship.positionArray = direction(this.shipLength)
-    console.log(ship);
+    let shipPositionArray = direction(ship.shipLength)
+  
+    while(!validatePosition(shipPositionArray)){
+      shipPositionArray = direction(ship.shipLength)
+    }
+    console.log(shipPositionArray)
+    ship.positionArray = shipPositionArray
+    // update board for next ship to know available spaces
+    updateBoard(shipPositionArray)
   }
+  console.log(board)
 }
 
+console.log(shipRandomizer(shipTypes))
+function updateBoard(positionsArray) {
+  for(var i = 0; i < positionsArray.length ; i ++){
+    var cord = positionsArray[i];
+    var x = cord[0]
+    var y = cord[1]
+    board[x][y] = 1
+  }
+}
 
 // function gridValidation(randNum) {
 //   //helper method to validate if ship can be placed in specific randomPos
@@ -111,7 +128,7 @@ function shipRandomizer (shipTypes){
 // }
 
 function generateStartPos() {
-  return [shuffleArray(range(10))[0], shuffleArray(range(10))[0]];
+  return [shuffleArray(range(9))[0], shuffleArray(range(9))[0]];
 }
 
 function validateStartPos() {
@@ -125,6 +142,9 @@ function validateStartPos() {
 
 }
 
+// console.log(validatePosition(direction(4)))
+// console.log(direction(4))
+
 function direction(shipLength) {
   var startPos = validateStartPos();
   var n = function (pos){ return [pos[0],pos[1] --]}
@@ -132,27 +152,35 @@ function direction(shipLength) {
   var e = function (pos){ return [pos[0] ++,pos[1]]}
   var w = function (pos){ return [pos[0] --,pos[1]]}
   var directionsArray = [n,s,e,w]
-  var shuffleDirections = shuffleArray(directionsArray) // array of rand directions
-
+  var randDirections = shuffleArray(directionsArray) // array of rand directions
+  return shuffleDirections(shipLength)
 
   function shuffleDirections(shipLength) {
-    shuffleDirections.forEach(function(e){
-    var shipPos = []
-    for(var i = 0; i < shipLength-1; i++){
-      let newPos = e(startPos)
-      let boardPos = board[newPos[0], newPos[1]]
-      shipPos.push(boardPos)
-    }
-    if(shipPos.every(function(element){return element === 0})){
-      return shipPos
-    }  
-  })
-    return false
-  }
-
-  while (shuffleDirections(shipLength) === false) {
-    direction(shipLength)
+    for(var j = 0; j < randDirections.length; j++){
+      var shipPos = [startPos]
+      for(var i = 0; i < shipLength - 1; i++){
+        let newPos = randDirections[0](startPos)
+        shipPos.push(newPos)
+      }  
+    return shipPos
+    break;
+    }//end for
   }
 }
 
-
+function validatePosition(positions){
+  //takes in positions array and validates
+  for(var i = 0; i < positions.length - 1; i++){
+    var cord = positions[i];
+    var x = cord[0]
+    var y = cord[1]
+    if(x >= 0 && x < 10 && y >= 0 && y < 10){
+      if(board[x][y] !== 0){
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+  return true
+}
