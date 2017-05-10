@@ -107,7 +107,6 @@ $(document).ready(function(){
       while(!validatePosition(shipPositionArray)){
         shipPositionArray = direction(ship.shipLength)
       }
-      console.log(shipPositionArray)
       ship.positionArray = shipPositionArray
       // update board for next ship to know available spaces
       updateBoard(shipPositionArray)
