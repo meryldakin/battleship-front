@@ -1,8 +1,4 @@
 $(document).ready(function(){
-
-
-
-
   const $wrap = $('#board-container')
   var grid = createGrid(700)
   $wrap.append(grid)
@@ -35,28 +31,41 @@ $(document).ready(function(){
   }
   var ammo = 5
   $("#ammo").append(`${ammo}`)
-  $(".square").val(false)
-  $(".square#1").val(true)
-  $(".square#2").val(true)
-  $(".square#3").val(true)
+  $(".square").attr("ship", false)
+  $(".square").attr("clicked", false)
+  $(".square#1").attr("ship", true)
+  $(".square#2").attr("ship", true)
+  $(".square#3").attr("ship", true)
 
 
+
+  var hitShips = []
   $(".square").on("click", function (event) {
     event.preventDefault()
-    var hitShips = []
     var cell = this
-    var hasShip = cell.val()
-    ammo --
-    $("#ammo").empty()
-    $("#ammo").append(`AMMO REMAINING: ${ammo}`)
-    console.log(cell)
-    if (cell.ship === true) {
-      hitShips.push(cell)
-      console.log(`You hit a piece of a ship! Its id was ${this.id}`)
+    if ($(cell).attr("clicked") === "false") {
+      ammo --
+      $("#ammo").empty()
+      $("#ammo").append(`AMMO REMAINING: ${ammo}`)
+      if ($(cell).attr("ship") === "true") {
+        $(cell).append('<img src="Fire-icon.png"/>')
+        hitShips.push($(cell).attr("id"))
+        console.log(`You hit a piece of a ship! Its id was ${this.id}`)
+      } else {
+        $(cell).append('<img src="target.png"/>')
+        console.log("Ya missed!")
+      }
+      if (ammo === 0) {
+        alert("Game over bitches")
+      }
+      if(hitShips.length === 3) {
+        alert("YOU BLEW UP A SHIP WON DA GAME YA YA YA")
+      }
+    } else {
+      alert("You did it already dummy")
     }
-    if (ammo === 0) {
-      alert("Game over bitches")
-    }
+    $(cell).attr("clicked", "true")
+    console.log(hitShips)
   })
 
 })

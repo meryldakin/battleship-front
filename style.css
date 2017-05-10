@@ -22,7 +22,7 @@ nav {
 }
 .square{
   float:left;
-  background-color: gray;
+  background-color: black;
   border-color: white;
   border-radius: 1;
   border-width: 1px;
@@ -46,4 +46,12 @@ nav {
 }
 .alignright {
 	float: right;
+}
+
+/*hit or miss*/
+.hit {
+	background: url('skullbones.gif') no-repeat center center;
+}
+.miss {
+	background: url('http://codifyacademy.com/project_battleship_demo/css/../img/miss.png') no-repeat center center;
 }
