@@ -1,14 +1,15 @@
 $(document).ready(function(){
   const $wrap = $('#board-container')
   var grid = createGrid(700)
+  var gameBoard;
   var shipTypes = [ {type: "battleship", shipLength: 5, positionArray: [], statusArray: []},
            {type: "cruiser", shipLength: 4, positionArray: [], statusArray: []},
            {type: "destroyer", shipLength: 3, positionArray: [], statusArray: []},
            {type: "submarine", shipLength: 3, positionArray: [], statusArray: []},
            {type: "frigate", shipLength: 2, positionArray: [], statusArray: []}
            ]
-  var ammo = 50
-  var hitShips = []
+  var ammo = 5
+  var sunkShips = []
 
   function createGrid(size){
     let grid = createSquare(size)
@@ -111,6 +112,7 @@ $(document).ready(function(){
       updateBoard(shipPositionArray)
 
     }
+    gameBoard = board;
     return board;
   }
 
@@ -186,7 +188,7 @@ $(document).ready(function(){
     }
     return true
   }
-
+// FIX THIS GAME_ID!!!!!!!
   function ajaxBoardCreate() {
     $.ajax({
       url: 'http://localhost:3000/boards',
@@ -196,9 +198,11 @@ $(document).ready(function(){
         status: shipRandomizer(shipTypes)
       }
     }).then(function (data) {
-      console.log(data)
-    })
-  }
+      console.log("it's successful", data)
+    }, function(err){
+      console.log(err)
+  })
+}
 
 // calls
 
@@ -224,14 +228,14 @@ $(".square").attr("clicked", false)
         miss($(cell))
       }
       if (ammo === 0) {
-        alert("Game over bitches")
+        lostGame();
       }
-      // if(hitShips.length === 3) {
-      //   alert("YOU BLEW UP A SHIP WON DA GAME YA YA YA")
-      // }
+      if(sunkShips.length === 5) {
+        alert("YOU BLEW UP A SHIP WON DA GAME YA YA YA")
+      }
     // if cell was clicked, come here
     } else {
-      alert("You did it already dummy")
+      alert("You clicked it already!")
     }
     // after the cell was clicked, come here
     $(cell).attr("clicked", "true")
@@ -244,7 +248,6 @@ function ammoUpdate(){
 
 function hit(cell) {
   cell.append('<img src="Fire-icon.png"/>')
-  hitShips.push(cell.attr("id"))
   console.log(`You hit a piece of a ship! Its id was ${this.id}`)
 }
 
@@ -271,6 +274,9 @@ function updateShip(cell) {
     for (var j = 0; j < ship.positionArray.length; j++) {
       var pos = ship.positionArray[j]
       if (cellArray.toString() === pos.toString()) {
+        var x = cellArray[0]
+        var y = cellArray[1]
+        gameBoard[x][y] = 2
         hitShip = ship
         break;
       }
@@ -278,8 +284,25 @@ function updateShip(cell) {
   }
   hitShip.statusArray.push(true)
   if(hitShip.statusArray.length === hitShip.shipLength) {
+    sunkShips.push(hitShip)
     alert(`You sunk my ${hitShip.type}!`)
   }
+}
+
+function lostGame() {
+  alert("Game Over")
+  console.log(gameBoard)
+  $.ajax({
+    url: 'http://localhost:3000/boards/1',
+    method: 'PUT',
+    data: { game_id: 1,
+            status: gameBoard},
+    dataType: "JSON"
+  }).then(function(data){
+    console.log(data)
+  }, function(err){
+    console.log(err)
+  })
 }
 
 
