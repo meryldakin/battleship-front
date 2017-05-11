@@ -7,7 +7,7 @@ $(document).ready(function(){
            {type: "submarine", shipLength: 3, positionArray: [], statusArray: [true, true, true]},
            {type: "frigate", shipLength: 2, positionArray: [], statusArray: [true, true]}
            ]
-  var ammo = 5
+  var ammo = 50
   var hitShips = []
 
   function createGrid(size){
