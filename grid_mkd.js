@@ -1,14 +1,17 @@
 $(document).ready(function(){
   const $wrap = $('#board-container')
   var grid = createGrid(700)
-  var shipTypes = [ {type: "battleship", shipLength: 5, positionArray: [], statusArray: [true, true, true, true, true]},
-           {type: "cruiser", shipLength: 4, positionArray: [], statusArray: [true, true, true, true]},
-           {type: "destroyer", shipLength: 3, positionArray: [], statusArray: [true, true, true]},
-           {type: "submarine", shipLength: 3, positionArray: [], statusArray: [true, true, true]},
-           {type: "frigate", shipLength: 2, positionArray: [], statusArray: [true, true]}
+  var gameBoard;
+  var shipTypes = [ {type: "battleship", shipLength: 5, positionArray: [], statusArray: []},
+           {type: "cruiser", shipLength: 4, positionArray: [], statusArray: []},
+           {type: "destroyer", shipLength: 3, positionArray: [], statusArray: []},
+           {type: "submarine", shipLength: 3, positionArray: [], statusArray: []},
+           {type: "frigate", shipLength: 2, positionArray: [], statusArray: []}
            ]
-  var ammo = 50
-  var hitShips = []
+
+  var ammo = 5
+  var sunkShips = []
+
 
   function createGrid(size){
     let grid = createSquare(size)
@@ -38,7 +41,6 @@ $(document).ready(function(){
   }
 
   function setCoordAttribute(){
-    console.log(this)
     var index = 1
     for(let x = 0; x < 10; x++){
       for(let y = 0; y < 10; y++){
@@ -112,6 +114,7 @@ $(document).ready(function(){
       updateBoard(shipPositionArray)
 
     }
+    gameBoard = board;
     return board;
   }
 
@@ -187,42 +190,122 @@ $(document).ready(function(){
     }
     return true
   }
+// FIX THIS GAME_ID!!!!!!!
+  function ajaxBoardCreate() {
+    $.ajax({
+      url: 'http://localhost:3000/boards',
+      method: 'POST',
+      data: {
+        game_id: 2,
+        status: shipRandomizer(shipTypes)
+      }
+    }).then(function (data) {
+      console.log("it's successful", data)
+    }, function(err){
+      console.log(err)
+  })
+}
 
 // calls
 
 $wrap.append(grid)
 generateCells(grid,10)
 setCoordAttribute()
-shipRandomizer(shipTypes)
+// shipRandomizer(shipTypes)
+ajaxBoardCreate()
 $("#ammo").append(`${ammo}`)
-  
-  $(".square").attr("clicked", false)
-
+$(".square").attr("clicked", false)
+//Game play
   $(".square").on("click", function (event) {
     event.preventDefault()
     var cell = this
+    console.log(cell)
+    // if the cell hasn't been clicked, proceed here:
     if ($(cell).attr("clicked") === "false") {
-      ammo --
-      $("#ammo").empty()
-      $("#ammo").append(`AMMO REMAINING: ${ammo}`)
+      ammoUpdate()
       if ($(cell).attr("ship") === "1") {
-        $(cell).append('<img src="Fire-icon.png"/>')
-        hitShips.push($(cell).attr("id"))
-        console.log(`You hit a piece of a ship! Its id was ${this.id}`)
+        hit($(cell))
+        updateShip($(cell))
       } else {
-        $(cell).append('<img src="target.png"/>')
-        console.log("Ya missed!")
+        miss($(cell))
       }
       if (ammo === 0) {
-        alert("Game over bitches")
+        lostGame();
       }
-      if(hitShips.length === 3) {
+      if(sunkShips.length === 5) {
         alert("YOU BLEW UP A SHIP WON DA GAME YA YA YA")
       }
+    // if cell was clicked, come here
     } else {
-      alert("You did it already dummy")
+      alert("You clicked it already!")
     }
+    // after the cell was clicked, come here
     $(cell).attr("clicked", "true")
-    console.log(hitShips)
   })
+
+function ammoUpdate(){
+  ammo --
+  $("#ammo").html(`AMMO REMAINING: ${ammo}`)
+}
+
+function hit(cell) {
+  cell.append('<img src="Fire-icon.png"/>')
+  console.log(`You hit a piece of a ship! Its id was ${this.id}`)
+}
+
+function miss(cell) {
+  cell.append('<img src="target.png"/>')
+  console.log("Ya missed!")
+}
+
+// var shipTypes = [ {type: "battleship", shipLength: 5, positionArray: [], statusArray: []},
+//          {type: "cruiser", shipLength: 4, positionArray: [], statusArray: []},
+//          {type: "destroyer", shipLength: 3, positionArray: [], statusArray: []},
+//          {type: "submarine", shipLength: 3, positionArray: [], statusArray: []},
+//          {type: "frigate", shipLength: 2, positionArray: [], statusArray: []}
+//          ]
+
+function updateShip(cell) {
+  var cellArray = JSON.parse(`[${$(cell).attr("x")}, ${$(cell).attr("y")}]`)
+  console.log(cellArray)
+  console.log(shipTypes)
+  var hitShip;
+
+  for (var i = 0; i < shipTypes.length; i++) {
+    var ship = shipTypes[i]
+    for (var j = 0; j < ship.positionArray.length; j++) {
+      var pos = ship.positionArray[j]
+      if (cellArray.toString() === pos.toString()) {
+        var x = cellArray[0]
+        var y = cellArray[1]
+        gameBoard[x][y] = 2
+        hitShip = ship
+        break;
+      }
+    }
+  }
+  hitShip.statusArray.push(true)
+  if(hitShip.statusArray.length === hitShip.shipLength) {
+    sunkShips.push(hitShip)
+    alert(`You sunk my ${hitShip.type}!`)
+  }
+}
+
+function lostGame() {
+  alert("Game Over")
+  console.log(gameBoard)
+  $.ajax({
+    url: 'http://localhost:3000/boards/1',
+    method: 'PUT',
+    data: { game_id: 1,
+            status: gameBoard},
+    dataType: "JSON"
+  }).then(function(data){
+    console.log(data)
+  }, function(err){
+    console.log(err)
+  })
+}
+
+
 })
