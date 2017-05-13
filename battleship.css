@@ -1,0 +1,119 @@
+/*body*/
+body{
+  padding-left:20px;
+  background-image: url("http://www.lawtoncs.org/Our_Schools/HS/Staff/MrMeyersite/Web_Design/Assignments/Fireworks/Images/RockOn_Images/Backgrounds/wood2.jpg")
+}
+.panel{
+  height: 768px;
+  float:left;
+}
+#leftpanel{
+  width:300px;
+  /*background-color:green;*/
+}
+#rightpanel{
+  width:300px;
+  /*background-color:gray;*/
+}
+#centerpanel{
+  margin-top:10px;
+  width:800px;
+  /*background-color:blue;*/
+}
+/*leftpanel*/
+#lefttitle{
+  margin-top:40px;
+}
+
+#ammobullets{
+  margin-right: 5px;
+}
+#shipscontainer{
+  border-radius:10px;
+  height: 380px;
+  width: 300px;
+  background-color:white;
+  padding-top:20px;
+  padding-left:30px;
+  -moz-box-shadow:    inset 0 0 5px #000000;
+  -webkit-box-shadow: inset 0 0 5px #000000;
+  box-shadow:         inset 0 0 5px #000000;
+  /*background-image: url("https://images.template.net/wp-content/uploads/2016/01/23055831/11%C3%9717-Tabloid-Grid-Paper-Template-PDF.jpeg");*/
+}
+#radarcontainer{
+  border-radius:10px;
+  height: 200px;
+  width: 200px;
+  /*background-color:red;*/
+  background-image: url("http://rs399.pbsrc.com/albums/pp71/Honcho94545/radar-o.gif~c200");
+}
+/*ships*/
+.shippng{
+  margin-bottom:15px;
+}
+/*center*/
+.square{
+  float:left;
+  background-color: black;
+  border-color: white;
+  border-radius: 1;
+  border-width: 1px;
+  border-style: solid;
+}
+#board-container{
+  margin-left:10px;
+  height: 780px;
+  width: 780px;
+  background-color:black;
+}
+/*rightpanel*/
+#switchboard{
+  border-radius:10px;
+  height: 470px;
+  width: 300px;
+  background-color:gray;
+  margin-top:60px;
+  padding-top:20px;
+  border: 1px solid #000000;
+  -moz-box-shadow: inset 2px 2px 2px rgba(255, 255, 255, .4), inset -2px -2px 2px rgba(0, 0, 0, .4);
+  -webkit-box-shadow: inset 2px 2px 2px rgba(255, 255, 255, .4), inset -2px -2px 2px rgba(0, 0, 0, .4);
+  box-shadow: inset 2px 2px 2px rgba(255, 255, 255, .4), inset -2px -2px 2px rgba(0, 0, 0, .4);
+  /*background-image: url("https://images.template.net/wp-content/uploads/2016/01/23055831/11%C3%9717-Tabloid-Grid-Paper-Template-PDF.jpeg");*/
+}
+.switch{
+  float:left;
+  width:88px;
+  height:50px;
+  margin: 5px;
+  border-radius:10px;
+  background-color:black;
+  text-align: center;
+  padding-top:5px;
+  color:white;
+  font-weight:bold;
+  font-size:13px;
+}
+.switch:active{
+  background-color:#303030;
+  -moz-box-shadow:    inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow:         inset 0 0 10px #000000;
+}
+#ready{
+  background-color: blue;
+}
+#missilealert{
+  background-color: orange;
+}
+#fire{
+  background-color: red;
+}
+#target{
+  background-color:green;
+}
+#siren{
+  background-color:green;
+}
+#radiocontainer{
+  margin-left: 50px;
+}
