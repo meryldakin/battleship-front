@@ -18,4 +18,4 @@ Front end setup
 3. Go to the web address http://localhost:8000/login.html in your broswer to login and start a new game 
 
 
-![Battleship Demo](http://recordit.co/L8fZS6gnNM)
+![Battleship Demo](/js/battleship.gif)
