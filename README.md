@@ -17,6 +17,5 @@ Front end setup
 	a. If the above command does not start your front end server try `python -m http.server`
 3. Go to the web address http://localhost:8000/login.html in your broswer to login and start a new game 
 
-Demo
 
-http://recordit.co/L8fZS6gnNM
+![Battleship Demo](/js/battleship.gif)
