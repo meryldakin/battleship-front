@@ -60,6 +60,14 @@ body{
   border-width: 1px;
   border-style: solid;
 }
+.cell{
+  float:left;
+  background-color: black;
+  border-color: white;
+  border-radius: 1;
+  border-width: 1px;
+  border-style: solid;
+}
 #board-container{
   margin-left:10px;
   height: 780px;

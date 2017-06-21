@@ -6,21 +6,21 @@
     <!-- Compiled and minified CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
-    <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-    <link rel="stylesheet" href="battleship.css">
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
+    <div class="row center"><h1 style={color:"white"}>BATTLESHIP</h1></div>
     <div class="panel" id="leftpanel">
       <div class="row center-align" id="lefttitle">
-        <img src="resources/ammobullets.png" alt="" id="ammobullets"><span id="leftammo"><h3 class="text-white">AMMO REMAINING:</span><span id="ammo"></span></h3>
+        <img src="resources/images/ammobullets.png" alt="" id="ammobullets"><span id="leftammo"><h5 class="text-white">AMMO REMAINING:</h5></span><span id="ammo"></span>
       </div>
       <div class="row" id="shipscontainer">
-        <img src="resources/destroyer.png" alt="" class="shippng" id="destroyer">
-        <img src="resources/cruiser.png" alt="" class="shippng" id="cruiser">
-        <img src="resources/battleship.png" alt="" class="shippng" id="battleship">
-        <img src="resources/frigate.png" alt="" class="shippng" id="frigate">
-        <img src="resources/submarine.png" alt="" class="shippng" id="submarine">
+        <img src="resources/images/destroyer.png" alt="" class="shippng" id="destroyer">
+        <img src="resources/images/cruiser.png" alt="" class="shippng" id="cruiser">
+        <img src="resources/images/battleship.png" alt="" class="shippng" id="battleship">
+        <img src="resources/images/frigate.png" alt="" class="shippng" id="frigate">
+        <img src="resources/images/submarine.png" alt="" class="shippng" id="submarine">
       </div>
       <div class="row" id="radarcontainer">
       </div>
@@ -56,9 +56,10 @@
           <div class="switch">OFF</div>
         </div>
       </div>
-      <img src="resources/radio.png" alt="" id="radiocontainer">
+      <img src="resources/images/radio.png" alt="" id="radiocontainer">
     </div>
-    <script type="text/javascript" src="battleship.js"></script>
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="js/Audio.js"></script>
+    <script type="text/javascript" src="js/helpers.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
   </body>
 </html>
