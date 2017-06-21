@@ -1,4 +1,7 @@
-
+// model for game
+// model for grid
+// model for ships
+// model for users
 var gameBoard;
 var shipTypes = [ {type: "battleship", shipLength: 5, positionArray: [], statusArray: []},
            {type: "cruiser", shipLength: 4, positionArray: [], statusArray: []},
@@ -24,15 +27,11 @@ const board = [
 ]
 
 
-function loggedIn(){
-  return sessionStorage.user_id ? true : false
-}
-
 function findOrCreateBoard() {
-  
+
   if(sessionStorage.board_id === "0" || sessionStorage.board_id === "null" || sessionStorage.board_ships === "" || sessionStorage.board_ships === "undefined"){
     ajaxBoardCreate()
-    
+
   } else {
 
     ajaxBoardGet().then(function(data){
@@ -53,7 +52,7 @@ function ajaxBoardGet(){
 }
 
 function ajaxBoardCreate() {
-  
+
     var newBoard = shipRandomizer(shipTypes)
     var positions = shipTypes.map(function(ship){
       return ship.positionArray.join(",")
@@ -122,13 +121,13 @@ function saveGame(gameResult,boardId, statusArray, positionArray){
     method: 'PUT',
     data: { user_id: sessionStorage.user_id,
             ammo: ammo,
-            game_result: gameResult, 
+            game_result: gameResult,
             status: gameBoard,
             ship: positionArray,
             hits: statusArray
           },
           success: console.log("we're saving"),
-            
+
     dataType: "JSON"
   })
 }
@@ -150,45 +149,19 @@ function updateGrid(x ,y, value) {
   }
   return $square.attr("ship", value)
 }
+
 function hit(cell) {
-  cell.append('<img src="Fire-icon.png"/>')
+  cell.append('<img src="resources/images/Fire-icon.png"/>')
   console.log(`You hit a piece of a ship! Its id was ${this.id}`)
 }
 
 function miss(cell) {
-  cell.append('<img src="target.png"/>')
+  cell.append('<img src="resources/images/target.png"/>')
   console.log("Ya missed!")
 }
 
-function shuffleArray(array) {
-  // helper function that shuffles and array of numbers
-  for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-  }
-  return array;
-}
-
-function range(start, edge, step) {
-  // helper function that generates a range
-  if (arguments.length == 1) {
-    edge = start;
-    start = 0;
-  }
-  edge = edge || 0;
-  step = step || 1;
-
-  for (var ret = []; (edge - start) * step > 0; start += step) {
-    ret.push(start);
-  }
-  return ret;
-}
-
-
 function shipRandomizer (shipTypes){
-  // method to randomly place ships
+  console.log("in ship randomizer:" ,shipTypes)
   var startingPos = Math.floor((Math.random() * 100) + 1);
   var increase = shuffleArray([1,10, -1, -10])[0]
   for(var i = 0; i < shipTypes.length ; i ++){
@@ -221,18 +194,6 @@ function generateStartPos() {
   return [shuffleArray(range(9))[0], shuffleArray(range(9))[0]];
 }
 
-function validateStartPos() {
-  var array = generateStartPos(); // [2,2]
-  while(board[array[0]][array[1]] !== 0) {
-    array = generateStartPos();
-  }
-  return array;
-}
-
-function updateGrid(x ,y, value) {
-  let $square = $(`.${x}${y}`)
-  return $square.attr("ship", value)
-}
 
 function direction(shipLength) {
   var startPos = validateStartPos();
@@ -242,19 +203,19 @@ function direction(shipLength) {
   var w = function (pos){ return [pos[0] --,pos[1]]}
   var directionsArray = [n,s,e,w]
   var randDirections = shuffleArray(directionsArray) // array of rand directions
-  return shuffleDirections(shipLength)
+  return shuffleDirections(shipLength,randDirections, startPos)
+}
 
-  function shuffleDirections(shipLength) {
-    for(var j = 0; j < randDirections.length; j++){
-      var shipPos = [startPos]
-      for(var i = 0; i < shipLength - 1; i++){
-        let newPos = randDirections[0](startPos)
-        shipPos.push(newPos)
-      }
-    return shipPos
-    break;
-    }//end for
-  }
+function shuffleDirections(shipLength, randDirections, startPos) {
+  for(var j = 0; j < randDirections.length; j++){
+    var shipPos = [startPos]
+    for(var i = 0; i < shipLength - 1; i++){
+      let newPos = randDirections[0](startPos)
+      shipPos.push(newPos)
+    }
+  return shipPos
+  break;
+  }//end for
 }
 
 function validatePosition(positions){
@@ -274,59 +235,17 @@ function validatePosition(positions){
   return true
 }
 
-function createGrid(size){
-    let grid = createSquare(size)
-    grid.setAttribute("class","grid");
-    return grid;
-  }
-
-function createSquare(size){
-  let square = document.createElement('div');
-  square.style.height = `${size}px`;
-  square.style.width = `${size}px`;
-  square.setAttribute("class", "square");
-  square.setAttribute("ship", 0);
-  return square;
-}
-
-  function setResolution(grid,number){
-  return grid.clientWidth/number
-}
-
-function generateCells(grid,numberPerRow){
-  for(var i =0; i < numberPerRow*numberPerRow; i++){
-    let square = createSquare(setResolution(grid,numberPerRow));
-    square.setAttribute("id",i+1)
-    grid.append(square)
-  }
-}
-
-function setCoordAttribute(){
-  var index = 1
-  for(let x = 0; x < 10; x++){
-    for(let y = 0; y < 10; y++){
-      $(`.square#${index}`).attr("x", x)
-      $(`.square#${index}`).attr("y", y)
-      $(`.square#${index}`).attr("class", `square ${x}${y}`)
-      index++
-    }
-  }
-} 
-
 function ammoUpdate(){
   ammo --
-  $("#ammo").html(`AMMO REMAINING: ${ammo}`)
+  $("#ammo").html(`${ammo}`)
 }
 
 function updateShip(cell) {
   var cellArray = JSON.parse(`[${$(cell).attr("x")}, ${$(cell).attr("y")}]`)
-  console.log(cellArray)
-  console.log(shipTypes)
   var hitShip;
 
   for (var i = 0; i < shipTypes.length; i++) {
     var ship = shipTypes[i]
-        console.log(ship)
     for (var j = 0; j < ship.positionArray.length; j++) {
       var pos = ship.positionArray[j]
       if (cellArray.toString() === pos.toString()) {
@@ -338,7 +257,7 @@ function updateShip(cell) {
       }
     }
   }
-  
+
   hitShip.statusArray.push(true)
   if(hitShip.statusArray.length === hitShip.shipLength) {
     sunkShips.push(hitShip)
@@ -349,27 +268,24 @@ function updateShip(cell) {
 }
 
 function renderDamage(ship,statusArray){
-  // console.log(ship.type)
-  // console.log(statusArray.length)
-  // console.log(ship.shipLength)
-  
     if(statusArray.length === 1){
-      $(`#${ship.type}`).attr('src',`resources/${ship.type}lightdamage.png`)
+      $(`#${ship.type}`).attr('src',`resources/images/${ship.type}lightdamage.png`)
     } else if(statusArray.length === ship.shipLength){
-      $(`#${ship.type}`).attr('src',`resources/${ship.type}fulldamage.png`)
+      $(`#${ship.type}`).attr('src',`resources/images/${ship.type}fulldamage.png`)
     } else if(statusArray.length > 1 ){
-      $(`#${ship.type}`).attr('src',`resources/${ship.type}halfdamage.png`)
+      $(`#${ship.type}`).attr('src',`resources/images/${ship.type}halfdamage.png`)
     }
-  }
+}
 
 // game home page logic
 //--------------------------------------------------------------------
- 
+
  //index.html
-$(document).ready(function(){ 
+$(document).ready(function(){
+  shipRandomizer(shipTypes)
    if(!loggedIn()){
-    if(window.location.href !== 'http://localhost:8000/login.html') {
-      window.location = "http://localhost:8000/login.html";
+    if(window.location.href !== 'http://localhost:8000/pages/login.html') {
+      window.location = "http://localhost:8000/pages/login.html";
     }
     // $('body').load('login.html');
     $('body').on('submit','form#login-form',function(e){
@@ -385,17 +301,17 @@ $(document).ready(function(){
           password: $password.val()
         }
       }).then(function(response){
-        
+
         sessionStorage.setItem("user_id",response.user_id)
         sessionStorage.setItem("board_id",response.board_id)
         sessionStorage.setItem("board_ships",response.board_ships)
       }).then(function(){
         console.log("We're about to create a board")
-        
+
         window.location = "http://localhost:8000/";
         // $('body').load('index.html')
       }), function(err){
-        
+
       console.log(err)
       }
     })
@@ -430,13 +346,13 @@ $(document).ready(function(){
           saveGame(2, sessionStorage.board_id, shipTypes.statusArray, sessionStorage.board_ships)
           alert("YOU LOSE!!!! GO HOME!! DO NOT PASS GO! DO NOT COLLECT $200!!!!")
           sessionStorage.clear()
-          window.location = "http://localhost:8000/login.html";
+          window.location = "http://localhost:8000/pages/login.html";
         }
         if(sunkShips.length === 5) {
           saveGame(1, sessionStorage.board_id, shipTypes.statusArray, sessionStorage.board_ships)
           alert("YOU BLEW UP A SHIP WON DA GAME YA YA YA")
           sessionStorage.clear()
-          window.location = "http://localhost:8000/login.html";
+          window.location = "http://localhost:8000/pages/login.html";
         }
       // if cell was clicked, come here
       } else {
@@ -448,6 +364,3 @@ $(document).ready(function(){
   }
 
 })
-
-
-
